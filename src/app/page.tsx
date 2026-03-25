@@ -102,7 +102,9 @@ export default function AussieUltimatePage() {
   // Parallax Engine
   const springY = useSpring(scrollY, { stiffness: 100, damping: 30 });
   const videoY = useTransform(springY, [0, 1000], [0, 200]);
-  const heroOpacity = useTransform(springY, [0, 400], [1, 0]);
+  const heroOpacity = useTransform(springY, [300, 900], [1, 0]);
+  const ringRotate1 = useTransform(springY, [0, 1000], [0, 45]);
+  const ringRotate2 = useTransform(springY, [0, 1000], [0, -90]);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -130,6 +132,14 @@ export default function AussieUltimatePage() {
       </motion.div>
 
       <div className="scanline" />
+
+      {/* ABSTRACT HUD ROTOR (Awwwards Effect) */}
+      <motion.div
+        style={{ rotate: ringRotate1, position: 'fixed', top: '10%', left: '50%', width: '120vw', height: '120vw', marginLeft: '-60vw', borderRadius: '50%', border: `1px dashed ${COLORS.teal}40`, zIndex: 0, opacity: 0.15, pointerEvents: 'none' }}
+      />
+      <motion.div
+        style={{ rotate: ringRotate2, position: 'fixed', top: '15%', left: '50%', width: '140vw', height: '140vw', marginLeft: '-70vw', borderRadius: '50%', border: `1px solid ${COLORS.teal}20`, zIndex: 0, opacity: 0.1, pointerEvents: 'none' }}
+      />
 
       {/* 2. PREMIUM HEADER */}
       <header className="fixed top-0 left-0 w-full z-[100] px-4 py-4 md:px-6 md:py-6 pointer-events-none">
@@ -182,19 +192,30 @@ export default function AussieUltimatePage() {
             <AnimatePresence mode="wait">
               <motion.div 
                 key={`${activeTab}-${textIndex}`}
-                initial={{ opacity: 0, scale: 1.02 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col items-center"
               >
                 <div style={{ fontSize: '13px', fontWeight: 900, color: COLORS.teal, letterSpacing: '0.5em', marginBottom: '20px' }}>{CATEGORIES[activeTab].sets[textIndex].code}</div>
-                <h1 style={{ fontWeight: 900, fontSize: 'clamp(2rem, 10vw, 6.5rem)', letterSpacing: '-0.01em', lineHeight: 1, margin: 0, color: '#fff' }} className="h-hud">
-                  {CATEGORIES[activeTab].sets[textIndex].title}
-                </h1>
-                <p style={{ marginTop: '36px', fontSize: '1.5rem', color: COLORS.teal, fontWeight: 700, letterSpacing: '0.1em', maxWidth: '800px', margin: '36px auto 0' }} className="h-hud">
+                
+                {/* Monolith Text Reveal Mask */}
+                <div style={{ overflow: 'hidden', paddingBottom: '12px', paddingTop: '12px' }}>
+                  <motion.h1 
+                    initial={{ y: '100%' }}
+                    animate={{ y: '0%' }}
+                    exit={{ y: '-100%' }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ fontWeight: 900, fontSize: 'clamp(2.5rem, 10vw, 7rem)', letterSpacing: '-0.02em', lineHeight: 1, margin: 0, color: '#fff' }} className="h-hud">
+                    {CATEGORIES[activeTab].sets[textIndex].title}
+                  </motion.h1>
+                </div>
+
+                <p style={{ marginTop: '24px', fontSize: '1.5rem', color: COLORS.teal, fontWeight: 700, letterSpacing: '0.1em', maxWidth: '800px' }} className="h-hud">
                    {CATEGORIES[activeTab].sets[textIndex].subtitle}
                 </p>
-                <p style={{ marginTop: '24px', fontSize: '15px', color: '#888', fontWeight: 500, letterSpacing: '0.12em', maxWidth: '650px', margin: '24px auto 0', lineHeight: 1.6 }} className="uppercase">
+                <p style={{ marginTop: '24px', fontSize: '15px', color: '#888', fontWeight: 500, letterSpacing: '0.12em', maxWidth: '650px', lineHeight: 1.6 }} className="uppercase">
                   WE SORT OUT: {CATEGORIES[activeTab].sets[textIndex].brands}
                 </p>
               </motion.div>
@@ -270,29 +291,47 @@ export default function AussieUltimatePage() {
       <section style={{ position: 'relative', zIndex: 10, background: '#050505', padding: '140px 24px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px' }}>
           
-          <div style={{ padding: '64px 40px', border: `1px solid ${COLORS.border}`, background: 'rgba(255,255,255,0.02)', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <motion.div 
+            initial={{ opacity: 0, x: -80, y: 60 }}
+            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            style={{ padding: '64px 40px', border: `1px solid ${COLORS.border}`, background: 'rgba(255,255,255,0.02)', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '24px' }}
+          >
              <ShieldCheck size={44} style={{ color: COLORS.teal }} />
              <div>
                 <h3 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#fff' }} className="h-hud">12 MONTH WARRANTY</h3>
                 <p style={{ marginTop: '16px', color: '#777', fontSize: '14px', lineHeight: 1.8, letterSpacing: '0.05em' }} className="uppercase">If it craps out, we've got your back. Full hardware protection on all genuine and compatible clickers. Deadset.</p>
              </div>
-          </div>
+          </motion.div>
 
-          <div style={{ padding: '64px 40px', border: `1px solid ${COLORS.teal}`, background: `${COLORS.teal}05`, borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <motion.div 
+            initial={{ opacity: 0, y: 120 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            style={{ padding: '64px 40px', border: `1px solid ${COLORS.teal}`, background: `${COLORS.teal}05`, borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '24px' }}
+          >
              <Truck size={44} style={{ color: COLORS.teal }} />
              <div>
                 <h3 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#fff' }} className="h-hud">FREE AU SHIPPING</h3>
                 <p style={{ marginTop: '16px', color: '#999', fontSize: '14px', lineHeight: 1.8, letterSpacing: '0.05em' }} className="uppercase">Fast and free delivery nationwide. We'll chuck it in the post straight from Sydney so you're not waiting yonks.</p>
              </div>
-          </div>
+          </motion.div>
 
-          <div style={{ padding: '64px 40px', border: `1px solid ${COLORS.border}`, background: 'rgba(255,255,255,0.02)', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <motion.div 
+            initial={{ opacity: 0, x: 80, y: 60 }}
+            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            style={{ padding: '64px 40px', border: `1px solid ${COLORS.border}`, background: 'rgba(255,255,255,0.02)', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '24px' }}
+          >
              <RotateCcw size={44} style={{ color: COLORS.teal }} />
              <div>
                 <h3 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#fff' }} className="h-hud">30 DAY RETURNS</h3>
                 <p style={{ marginTop: '16px', color: '#777', fontSize: '14px', lineHeight: 1.8, letterSpacing: '0.05em' }} className="uppercase">Bought the wrong one? No wukkas. Send it back within 30 days and we'll sort you out. Easy as.</p>
              </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>
